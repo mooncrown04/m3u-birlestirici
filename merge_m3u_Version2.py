@@ -1,11 +1,10 @@
-import requests
+import urllib.request
 import sys
 
 def fetch_m3u(url):
     try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        return response.text
+        with urllib.request.urlopen(url, timeout=10) as response:
+            return response.read().decode("utf-8")
     except Exception as e:
         print(f"Failed to fetch {url}: {e}")
         return ""
@@ -28,7 +27,7 @@ def merge_m3u(url_list, output_file="merged.m3u"):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python merge_m3u.py https://raw.githubusercontent.com/Lunedor/iptvTR/refs/heads/main/FilmArsiv.m3u https://raw.githubusercontent.com/Zerk1903/zerkfilm/refs/heads/main/Diziler.m3u ...")
+        print("Usage: python merge_m3u_with_urllib.py https://raw.githubusercontent.com/Lunedor/iptvTR/refs/heads/main/FilmArsiv.m3u https://raw.githubusercontent.com/Zerk1903/zerkfilm/refs/heads/main/Diziler.m3u ...")
         sys.exit(1)
     urls = sys.argv[1:]
     merge_m3u(urls)
